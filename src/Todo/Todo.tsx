@@ -1,60 +1,26 @@
-// import React from "react";
-// import { tasks } from "../data/tasks";
-
-// export const Todo = () => {
-//     return (
-//         <>
-//             {tasks.map(task => (
-//                 <table key={task.id} className="d-flex justify-content-center" style={{width: '100%'}}>
-//                     <tr> 
-//                     <td>{task.id}</td>
-//                     <td>{task.description}</td>
-//                     </tr>
-//                 </table>
-//             ))}
-//         </>
-//     );
-// }
-
-import React, { useState } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../state";
 import { RootState } from "../state/reducers";
+import { Button } from "react-bootstrap";
 
 export const Todo = () => {
+    const dispatch = useDispatch();
   const tasks = useSelector((state: RootState) => state.state.todo_state);
-  const dispatch = useDispatch();
-  const [newTaskDescription, setNewTaskDescription] = useState("");
-
-  const { addTask } = bindActionCreators(actionCreators, dispatch);
-
-  const handleAddTask = () => {
-    if (newTaskDescription.trim() !== "") {
-      addTask({
-        id: 0, // You can set this to the appropriate value
-        description: newTaskDescription,
-      });
-      setNewTaskDescription("");
-    }
+  const { deleteTask } = bindActionCreators(actionCreators, dispatch);
+  const handleDeleteTask = (taskId:number) => {
+    deleteTask(taskId);
   };
   return (
     <>
-      <div>
-        <input
-          type="text"
-          placeholder="Enter a new task"
-          value={newTaskDescription}
-          onChange={(e) => setNewTaskDescription(e.target.value)}
-        />
-        <button onClick={handleAddTask}>Add Task</button>
-      </div>
       <table className="d-flex justify-content-center" style={{ width: "100%" }}>
         <tbody>
           {tasks.map((task) => (
             <tr key={task.id}>
               <td>{task.id}</td>
               <td>{task.description}</td>
+              <td> <Button onClick={() => handleDeleteTask(task.id)}>Delete</Button></td>
             </tr>
           ))}
         </tbody>
